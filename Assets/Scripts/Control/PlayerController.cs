@@ -7,6 +7,13 @@ namespace RPG.Control
     public class PlayerController : MonoBehaviour
     {
 
+        Fighter fighter;
+
+        public void Start()
+        {
+            fighter = GetComponent<Fighter>();
+        }
+
         private void Update()
         {
             if (InteractWithCombat()) return;
@@ -19,13 +26,13 @@ namespace RPG.Control
 
             foreach (RaycastHit hit in hits)
             {
-                CombatTarget target = hit.transform.GetComponent<CombatTarget>();
+                Health target = hit.transform.GetComponent<Health>();
 
-                if (target == null) continue;
+                if (!fighter.CanAttack(target)) continue;
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    GetComponent<Fighter>().Attack(target);
+                    fighter.Attack(target);
                 }
 
                 return true;
