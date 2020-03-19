@@ -14,7 +14,7 @@ namespace RPG.Combat
         Animator animator;
         Mover mover;
 
-        float timeSinceLastAttack = 0;
+        float timeSinceLastAttack = Mathf.Infinity;
 
         void Start()
         {
@@ -26,8 +26,8 @@ namespace RPG.Combat
         {
             timeSinceLastAttack += Time.deltaTime;
 
-            if (!target) return;
-            if (target.IsDead()) return;
+            if (!target) { return; }
+            if (target.IsDead()) { return; }
 
             if (!GetIsInRange())
             {
@@ -46,15 +46,24 @@ namespace RPG.Combat
 
             if (timeSinceLastAttack > timeBetweenAttacks)
             {
-                // This will trigger the Hit() event.
-                animator.SetTrigger("attack");
+                TriggerAttack();
                 timeSinceLastAttack = 0;
             }
+        }
+
+        private void TriggerAttack()
+        {
+            animator.ResetTrigger("stopAttack");
+
+            // This will trigger the Hit() event.
+            animator.SetTrigger("attack");
         }
 
         // Animation Event
         void Hit()
         {
+            if (!target) { return; }
+
             target.TakeDamage(weaponDamage);
         }
 
@@ -63,21 +72,32 @@ namespace RPG.Combat
             return Vector3.Distance(transform.position, target.transform.position) < weaponRange;
         }
 
-        public void Attack(Health combatTarget)
+        public void Attack(GameObject combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            target = combatTarget;
+            
+            target = combatTarget.GetComponent<Health>();
+        }
+
+        public bool CanAttack(GameObject combatTarget)
+        {
+            if (!combatTarget) { return false;  }
+
+            Health targetToTest = combatTarget.GetComponent<Health>();
+
+            return targetToTest && !targetToTest.IsDead();
         }
 
         public void Cancel()
         {
-            animator.SetTrigger("stopAttack");
+            StopAttack();
             target = null;
         }
 
-        public bool CanAttack(Health target)
+        private void StopAttack()
         {
-            return target && !target.IsDead();
+            animator.ResetTrigger("attack");
+            animator.SetTrigger("stopAttack");
         }
 
     }
