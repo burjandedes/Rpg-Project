@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,28 +13,28 @@ namespace RPG.Control
 
         private void OnDrawGizmos()
         {
-            int numberOfChildren = transform.childCount;
-
-            for (int i = 0; i < numberOfChildren; ++i)
+            for (int i = 0; i < transform.childCount; ++i)
             {
-                Transform child = transform.GetChild(i);
-                Transform previousChild;
+                int j = GetNextIndex(i);
 
-                if (i == 0)
-                {
-                    previousChild = transform.GetChild(numberOfChildren - 1);
-                }
-                else
-                {
-                    previousChild = transform.GetChild(i - 1);
-                }
-
-                Vector3 childPosition = child.position;
-                Vector3 previousChildPosition = previousChild.position;
-
-                Gizmos.DrawLine(childPosition, previousChildPosition);
-                Gizmos.DrawSphere(childPosition, waypointGizmoRadius);
+                Gizmos.DrawSphere(GetWaypoint(i), waypointGizmoRadius);
+                Gizmos.DrawLine(GetWaypoint(i), GetWaypoint(j));
             }
+        }
+
+        public int GetNextIndex(int i)
+        {
+            if (i + 1 == transform.childCount)
+            {
+                return 0;
+            }
+
+            return i + 1;
+        }
+
+        public Vector3 GetWaypoint(int i)
+        {
+            return transform.GetChild(i).position;
         }
 
     }
