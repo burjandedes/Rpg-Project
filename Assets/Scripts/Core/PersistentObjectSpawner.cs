@@ -15,12 +15,9 @@ namespace RPG.Core
 
         void Awake()
         {
-            if (!hasSpawned)
-            {
-                SpawnPersistentObjects();
-
-                hasSpawned = true;
-            }
+            if (hasSpawned) return;
+            SpawnPersistentObjects();
+            hasSpawned = true;
         }
 
         private void SpawnPersistentObjects()
@@ -28,6 +25,7 @@ namespace RPG.Core
             GameObject persistentObject = Instantiate(persistentObjectPrefab);
             DontDestroyOnLoad(persistentObject);
         }
+
     }
 
 }
