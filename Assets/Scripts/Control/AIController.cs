@@ -30,6 +30,7 @@ namespace RPG.Control
 
         int currentWaypointIndex = 0;
 
+		// Start
         void Start()
         {
             fighter = GetComponent<Fighter>();
