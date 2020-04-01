@@ -27,7 +27,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chaseDistance: 5
-  suspitionDuration: 5
+  suspitionTime: 5
+  waypointDwellTime: 3
+  waypointTolerance: 1
+  patrolSpeedFraction: 0.2
+  patrolPath: {fileID: 0}
 --- !u!114 &8876111546925012098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,6 +59,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6809787024987064579, guid: 6ff23c305a1846b4f80fd40d71271167,
+        type: 3}
+      propertyPath: uniqueIdentifier
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8114574454931256666, guid: 6ff23c305a1846b4f80fd40d71271167,
         type: 3}
@@ -115,6 +124,11 @@ PrefabInstance:
         type: 3}
       propertyPath: health
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8234758786230605806, guid: 6ff23c305a1846b4f80fd40d71271167,
+        type: 3}
+      propertyPath: healthPoints
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6599899099176724962, guid: 6ff23c305a1846b4f80fd40d71271167, type: 3}
