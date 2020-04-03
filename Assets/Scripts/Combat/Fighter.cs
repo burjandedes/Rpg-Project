@@ -9,8 +9,10 @@ namespace RPG.Combat
     {
         [SerializeField] float timeBetweenAttacks = 1f;
 
-        [SerializeField] Transform handTransform = null;
-        [SerializeField] Weapon weapon = null;
+        [SerializeField] Transform leftHandTransform = null;
+        [SerializeField] Transform rightHandTransform = null;
+        [SerializeField] Weapon defaultWeapon = null;
+        [SerializeField] Weapon currentWeapon = null;
         
 
         Health target;
@@ -24,7 +26,7 @@ namespace RPG.Combat
             animator = GetComponent<Animator>();
             mover = GetComponent<Mover>();
 
-            SpawnWeapon();
+            EquipWeapon(defaultWeapon);
         }
 
         private void Update()
@@ -45,12 +47,11 @@ namespace RPG.Combat
             }
         }
 
-        private void SpawnWeapon()
+        public void EquipWeapon(Weapon weapon)
         {
-            if (weapon == null) return;
-
+            currentWeapon = weapon;
             Animator animator = GetComponent<Animator>();
-            weapon.Spawn(handTransform, animator);
+            weapon.Spawn(rightHandTransform, leftHandTransform, animator);
         }
 
         private void AttackBehaviour()
@@ -77,12 +78,25 @@ namespace RPG.Combat
         {
             if (!target) { return; }
 
-            target.TakeDamage(weapon.GetWeaponDamage());
+            if (currentWeapon.HasProjectile())
+            {
+                currentWeapon.LaunchProjectile(rightHandTransform, leftHandTransform, target);
+            }
+            else
+            {
+                target.TakeDamage(currentWeapon.GetWeaponDamage());
+            }
+        }
+
+        // Animation Event
+        void Shoot()
+        {
+            Hit();
         }
 
         public bool GetIsInRange()
         {
-            return Vector3.Distance(transform.position, target.transform.position) < weapon.GetWeaponRange();
+            return Vector3.Distance(transform.position, target.transform.position) < currentWeapon.GetWeaponRange();
         }
 
         public void Attack(GameObject combatTarget)
